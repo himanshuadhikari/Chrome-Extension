@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+    "name": "Chanters Player",
+    "version": "1",
+    "icons": {
+        "128": "icon_128.png"
+    },
+    "permissions": [
+        "http://*/*",
+        "https://*/*",
+        "https://www.google.com/*",
+        "http://www.google.com/*"
+    ],
+    "minimum_chrome_version": "28",
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "views/popup.html"
+    },
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    }
+}

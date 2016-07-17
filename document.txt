@@ -1,0 +1,266 @@
+Step 1:
+
+Get familiar with Chrome Apps :-
+
+A Chrome App contains the following components:
+1. The manifest specifies the meta information of your app. The manifest tells Chrome about your 	app, how to launch it, and any extra permissions that it requires.
+
+2. The event page, also called a background script, is responsible for managing the app life cycle. The background script is where you register listeners for specific app events such as the launching and closing of the app's window.
+
+3. All code files must be packaged in the Chrome App. This includes HTML, CSS, JS, and Native Client modules.
+
+4. Assets, including app icons, should be packaged in the Chrome App as well.
+
+
+Create a manifest :-
+
+Open your favorite code/text editor and create the following file named manifest.json:
+
+
+=======================================
+{
+  "manifest_version": 2,
+  "name": "Codelab",
+  "version": "1",
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "permissions": [],
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "minimum_chrome_version": "28"
+}
+=======================================
+
+
+Notice how this manifest describes a background script named background.js. You will create that file next.
+
+=======================================
+"background": {
+  "scripts": ["background.js"]
+}
+=======================================
+
+
+We'll supply you with an app icon later in this step:
+
+=======================================
+"icons": {
+  "128": "icon_128.png"
+},
+=======================================
+
+Create a background script
+
+Create the following file and save it as background.js:
+
+
+=======================================
+/**
+ * Listens for the app launching then creates the window
+ *
+ * @see http://developer.chrome.com/apps/app.window.html
+ */
+chrome.app.runtime.onLaunched.addListener(function() {
+  chrome.app.window.create('index.html', {
+    id: 'main',
+    bounds: { width: 620, height: 500 }
+  });
+});
+=======================================
+
+For presentation purpose
+Within this point team can see a small window
+
+
+This background script simply waits for the chrome.app.runtime.onLaunched launch event for the application and executes the callback function: 
+* This event is similar to document.onload event
+
+=======================================
+chrome.app.runtime.onLaunched.addListener(function() {
+  //...
+});
+=======================================
+
+When the Chrome App is launched, chrome.app.window.create() will create a new window using a basic HTML page (index.html) as the source. You will create the HTML view in the next step.
+
+=======================================
+chrome.app.window.create('index.html', {
+  id: 'main',
+  bounds: { width: 620, height: 500 }
+});
+=======================================
+
+
+Background scripts may contain additional listeners, windows, post messages, and launch data — all of which are used by the event page to manage the app.
+
+
+
+Create an HTML view
+Create a simple web page to display a "Hello World" message to the screen and save it as index.html:
+
+
+=======================================
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Hello, let's code!</h1>
+</body>
+</html>
+=======================================
+
+Just like any other web page, within this HTML file you can include additional packaged JavaScript, CSS, or assets.
+
+Add an app icon
+Right-click and save this 128x128 image to your project folder as icon_128.png:
+
+Confirm that you have created all your files
+You should have these 4 files in your project folder now:
+
+
+
+Install a Chrome App in developer mode
+Use developer mode to quickly load and launch your app without having to finalize your app as a distribution package.
+
+1. Access chrome://extensions from the Chrome omnibox.
+2. Check off the Developer mode check box.
+3. Click Load unpacked extension.
+4. Using the file picker dialog, navigate to your app's project folder and select it to load your app.
+
+
+
+Launch your finished Hello World app
+
+After loading your project as an unpacked extension, click Launch next to your installed app. A new standalone window should open up:
+
+Congratulations, you've just created a new Chrome App!
+
+Debug a Chrome App with Chrome DevTools
+You can use the Chrome Developer Tools to inspect, debug, audit, and test your app just like you do on a regular web page.
+
+After you make changes to your code and reload your app (right-click > Reload App), check the DevTools console for any errors (right-click > Inspect Element).
+
+
+(We'll cover the Inspect Background Page option in Step 3 with alarms.)
+
+The DevTools JavaScript console has access to the same APIs available to your app. You can easily test an API call before adding it to your code:
+
+
+
+Step 2:  https://developer.chrome.com/apps/app_codelab_import_todomvc
+Import an Existing Web App
+
+In this step, you will learn:
+
+How to adapt an existing web application for the Chrome Apps platform.
+How to make your app scripts Content Security Policy (CSP) compliant.
+How to implement local storage using the chrome.storage.local.
+
+
+ Content Security Policy :
+
+ Let's fix this error by making the app Content Security Policy compliant. One of the most common CSP non-compliances is caused by inline JavaScript. Examples of inline JavaScript include event handlers as DOM attributes (e.g. <button onclick=''>) and <script> tags with content inside the HTML.
+
+ The solution is simple: move the inline content to a new file.
+
+1. Near the bottom of index.html, remove the inline JavaScript and instead include js/bootstrap.js:
+
+
+You'll still have a non-working Todo app if you reload the app now but you're getting closer.
+
+Convert localStorage to chrome.storage.local
+If you open the DevTools Console now, the previous error should be gone. There is a new error, however, about window.localStorage not being available:
+
+Chrome Apps do not support localStorage as localStorage is synchronous. Synchronous access to blocking resources (I/O) in a single-threaded runtime could make your app unresponsive.
+
+Chrome Apps have an equivalent API that can store objects asynchronously. This will help avoid the sometimes costly object->string->object serialization process.
+
+To address the error message in our app, you need to convert localStorage to chrome.storage.local.
+
+Update app permissions
+
+In order to use chrome.storage.local, you need to request the storage permission. In manifest.json, add "storage" to the permissions array:
+
+========================================
+"permissions": ["storage"],
+========================================
+
+Learn about local.storage.set() and local.storage.get()
+
+To save and retrieve todo items, you need to know about the set() and get() methods of the chrome.storage API.
+
+The set() method accepts an object of key-value pairs as its first parameter. An optional callback function is the second parameter. For example:
+
+chrome.storage.local.set({secretMessage:'Psst!',timeSet:Date.now()}, function() {
+  console.log("Secret message saved");
+}); 
+
+The get() method accepts an optional first parameter for the datastore keys you wish to retreive. A single key can be passed as a string; multiple keys can be arranged into an array of strings or a dictionary object.
+
+The second parameter, which is required, is a callback function. In the returned object, use the keys requested in the first parameter to access the stored values. For example:
+
+chrome.storage.local.get(['secretMessage','timeSet'], function(data) {
+  console.log("The secret message:", data.secretMessage, "saved at:", data.timeSet);
+});
+
+If you want to get() everything that is currently in chrome.storage.local, omit the first parameter:
+
+chrome.storage.local.get(function(data) {
+  console.log(data);
+}); 
+
+
+Unlike localStorage, you won't be able to inspect locally stored items using the DevTools Resources panel. You can, however, interact with chrome.storage from the JavaScript Console like so:
+
+Preview required API changes
+Most of the remaining steps in converting the Todo app are small changes to the API calls. Changing all the places where localStorage is currently being used, though time-consuming and error-prone, is required.
+
+To maximize your fun with this codelab, it'll be best if you overwrite your store.js, controller.js, and model.js with the ones from cheat_code/solution_for_step_2 in the reference code zip. 
+
+Once you've done that, continue reading as we'll go over each of the changes individually.
+
+The key differences between localStorage and chrome.storage come from the async nature of chrome.storage:
+
+Instead of writing to localStorage using simple assignment, you need to use chrome.storage.local.set() with optional callbacks.
+var data = { todos: [] };
+localStorage[dbName] = JSON.stringify(data); versus
+var storage = {};
+storage[dbName] = { todos: [] };
+chrome.storage.local.set( storage, function() {
+  // optional callback
+});
+Instead of accessing localStorage[myStorageName] directly, you need to use chrome.storage.local.get(myStorageName,function(storage){...}) and then parse the returned storage object in the callback function.
+var todos = JSON.parse(localStorage[dbName]).todos; versus
+chrome.storage.local.get(dbName, function(storage) {
+  var todos = storage[dbName].todos;
+});
+The function .bind(this) is used on all callbacks to ensure this refers to the this of the Store prototype. (More info on bound functions can be found on the MDN docs: Function.prototype.bind().)
+function Store() {
+  this.scope = 'inside Store';
+  chrome.storage.local.set( {}, function() {
+    console.log(this.scope); // outputs: 'undefined'
+  });
+}
+new Store(); versus
+function Store() {
+  this.scope = 'inside Store';
+  chrome.storage.local.set( {}, function() {
+    console.log(this.scope); // outputs: 'inside Store'
+  }.bind(this));
+}
+new Store();
+Keep these key differences in mind as we cover retrieving, saving, and removing todo items in the following sections.
+
+
+
+
+
+
+
+

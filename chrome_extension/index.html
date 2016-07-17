@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style/chanters.css">
+    <link rel="stylesheet" type="text/css" href="style/logo.css">
+    <link rel="stylesheet" type="text/css" href="style/media.css">
+    <script src="scripts/chanters.js"></script>
+    <script src="scripts/background.js"></script>
+</head>
+
+<body>
+    <div class="wrapper-fluid">
+        <chanters-header>
+            <template>
+                <div id="header" class="header btm-border dark-div fixed-top">
+                    <div id="logo" class="border">
+                        <div id="bar1"></div>
+                        <div id="bar2"></div>
+                        <div id="bar3"></div>
+                        <div id="bar4"></div>
+                    </div>
+                    <div class="logout">
+                        <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Player</button>
+                        <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Log In</button>
+                    </div>
+                </div>
+            </template>
+            <script src="scripts/helpers/chanters-header.js"></script>
+        </chanters-header>
+        <chanters-background attributes="src:images/vidyut-jamwal-7a.jpg">
+            <template>
+                <div class="wrapper-fixed wall fixed-top" style="z-index:-1">
+                    <img class="wall-img" src="{{src}}" />
+                </div>
+            </template>
+            <script src="scripts/helpers/chanters-background.js"></script>
+        </chanters-background>
+        <chanters-view attributes="template:login.html" clsss="dark-div">
+            <template></template>
+            <script src="scripts/helpers/chanters-view.js"></script>
+        </chanters-view>
+        <chanters-fotter>
+            <template>
+                <div class="fixed-bottom footer top-border dark-div box-shadow">
+                    <button class="border box-shadow dark-div singin txt-shadow">Sing up</button>
+                    <span class="border box-shadow dark-div txt-shadow logo">Chanters</span>
+                </div>
+            </template>
+            <script src="scripts/helpers/chanters-fotter.js"></script>
+        </chanters-fotter>
+    </div>
+</body>
+
+</html>

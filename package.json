@@ -1,0 +1,19 @@
+{
+  "name": "chrome-app",
+  "version": "1.0.0",
+  "description": "chrome app to play songs locally",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "player",
+    "chrome-app"
+  ],
+  "author": "himanshu adhikari",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.4.2",
+    "express": "^4.14.0"
+  }
+}
