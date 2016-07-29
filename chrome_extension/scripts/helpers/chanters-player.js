@@ -9,6 +9,7 @@ Chanters("chanters-player", {
     videoMode: "hidden",
     createList: function createList(event) {
         event.target.nextElementSibling.click();
+        document.querySelector("#mode").classList.remove("hidden");
         event.target.nextElementSibling.onchange = function() {
             this.visibility = "hidden";
             var list_ = event.target.nextElementSibling.files,
@@ -16,7 +17,7 @@ Chanters("chanters-player", {
                 songList = document.querySelector("#songList"),
                 chantersPlayer = document.querySelector("chanters-player");
             document.querySelector("#songList ").style.display = "block";
-            document.querySelector("chanters-view").style.backgroundColor = "transparent";
+            document.querySelector("chanters-view").classList.remove("dark-div");
 
             for (var i = 0; i < list_.length; i++) {
                 var li = document.createElement('li');

@@ -24,7 +24,8 @@
                     <span id="currentTime" style="position:absolute;left:19%;padding: 12px 14px;display:none">00::00</span>
                     <span id="totalTime" style="position:absolute;left:25%;padding: 12px 14px;display:none">00::00</span>
                     <div class="logout">
-                       <!--  <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Player</button>
+                        <button class="txt-shadow btn-menu hidden" on-click="{{changeMode}}" id="mode">{{mode}}</button>
+                        <!--  <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Player</button>
                         <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Log In</button> -->
                     </div>
                     <input type="range" id="seek" min="0" max="100" value="0" style="width:85%;margin-top: 38px;display:none">
