@@ -22,7 +22,7 @@ body {
     height: 40px;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-    z-index: 99;
+    z-index: initial;
 }
 
 .btm-border {
@@ -111,9 +111,54 @@ body {
 
 chanters-view {
     position: fixed;
-    background-color: rgba(0, 0, 0, 0.5);
     margin-top: 40px;
     height: 100%;
     width: 100%;
-    transition: all 1s ease-in-out;
+    transition: all .5s linear .2s;
+    z-index: -1;
+}
+
+.hidden,
+.visible {
+    visibility: hidden;
+    transition: all 2s linear 1s;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.fixed {
+    position: fixed;
+}
+
+#seek {
+    margin-left: 18%;
+}
+
+.loginFalse {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake {
+    10%,
+    90% {
+        transform: translate3d(-5px, 0, 0);
+    }
+    20%,
+    80% {
+        transform: translate3d(3px, 0, 0);
+    }
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-5px, 0, 0);
+    }
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }

@@ -1,7 +1,51 @@
 Chanters("chanters-player", {
     domReady: function() {
         window.requestAnimationFrame(welcomeAnimation);
-        this.style.display = "block"
+        this.style.display = "block";
+    },
+    left: "46%",
+    top: "300px",
+    visibility: "hidden",
+    videoMode: "hidden",
+    createList: function createList(event) {
+        event.target.nextElementSibling.click();
+        event.target.nextElementSibling.onchange = function() {
+            this.visibility = "hidden";
+            var list_ = event.target.nextElementSibling.files,
+                str = "",
+                songList = document.querySelector("#songList"),
+                chantersPlayer = document.querySelector("chanters-player");
+            document.querySelector("#songList ").style.display = "block";
+            document.querySelector("chanters-view").style.backgroundColor = "transparent";
+
+            for (var i = 0; i < list_.length; i++) {
+                var li = document.createElement('li');
+                (function(li, i) {
+                    if (list_[i].name.indexOf(".jpg") === -1 && list_[i].name.indexOf(".jpeg") === -1) {
+                        li.innerHTML = '<a> ' + list_[i].name + ' </a>';
+                        li.songObject = list_[i];
+                        li.onclick = playMe;
+                        songList.appendChild(li);
+                        setTimeout(function() {
+                            li.style.opacity = 1;
+                            if (chantersPlayer.clientHeight < chantersPlayer.parentNode.clientHeight) {
+                                if (!chantersPlayer.style.height)
+                                    chantersPlayer.style.height = chantersPlayer.clientHeight + 4 + "px";
+                                else {
+                                    chantersPlayer.style.height = parseInt(chantersPlayer.style.height.split("px")[0]) + 4 + "px";
+                                }
+                            }
+                        }, 2000);
+                    }
+                })(li, i);
+                // getImageFromMp3(list_[i]);
+                // }
+            }
+            welcome.remove();
+            document.querySelector("#fileupload").remove();
+            document.querySelector("#_fileupload").remove();
+            document.querySelector("#title").style.display = "block";
+        }.bind(this);
     }
 });
 var welcome = document.querySelector("#welcome");
@@ -45,6 +89,9 @@ function notifyMe(songName) {
     // want to be respectful there is no need to bother them any more.
 }
 
+if (localStorage.isPlaying == "true") {
+    str = "Now playing " + localStorage.songName;
+}
 
 function welcomeAnimation() {
     if (str[count]) {
@@ -53,48 +100,21 @@ function welcomeAnimation() {
         window.requestAnimationFrame(welcomeAnimation);
     } else {
         setTimeout(function() {
-            welcome.innerHTML = "upload song";
-            document.querySelector("#fileupload").style.display = "block";
-            window.cancelAnimationFrame(welcomeAnimation);
+            if (localStorage.isPlaying == "true") {
+                str = "Now playing " + localStorage.songName;
+            } else {
+                var userName = localStorage.userName;
+                var chantersPlayer = document.querySelector("chanters-player");
+                welcome.innerHTML = "Hello " + userName + ", Please choose songs to play";
+                document.querySelector("#fileupload").style.display = "block";
+                window.cancelAnimationFrame(welcomeAnimation);
+                chantersPlayer.visibility = "visible";
+            }
         }, 2000)
     }
 }
 
 
-function createList(event) {
-    var list_ = event.target.files,
-        str = "",
-        songList = document.querySelector("#songList"),
-        chantersPlayer = document.querySelector("chanters-player");
-    document.querySelector("#songList ").style.display = "block";
-    document.querySelector("chanters-view").style.backgroundColor = "transparent";
-
-    for (var i = 0; i < list_.length; i++) {
-        var li = document.createElement('li');
-        (function(li, i) {
-            // if (list_[i].name.indexOf(".mp3") !== -1) {
-            li.innerHTML = '<a onclick="playMe(event)"> ' + list_[i].name + ' </a>';
-            li.songObject = list_[i];
-            songList.appendChild(li);
-            setTimeout(function() {
-                li.style.opacity = 1;
-                if (chantersPlayer.clientHeight < chantersPlayer.parentNode.clientHeight) {
-                    if (!chantersPlayer.style.height)
-                        chantersPlayer.style.height = chantersPlayer.clientHeight + 4 + "px";
-                    else {
-                        chantersPlayer.style.height = parseInt(chantersPlayer.style.height.split("px")[0]) + 4 + "px";
-                    }
-                }
-            }, 2000);
-
-        })(li, i);
-        // getImageFromMp3(list_[i]);
-        // }
-    }
-    welcome.remove();
-    document.querySelector("#fileupload").remove();
-    document.querySelector("#title").style.display = "block";
-}
 
 
 function getImageFromMp3(file) {
@@ -132,51 +152,59 @@ var previous;
 var seek = document.querySelector("#seek");
 
 function playMe(event, nextSong) {
-    console.log("sdfs");
-    if (nextSong) {
-        nextSong.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-        previous.style.backgroundColor = "transparent";
-    }
-    previous = nextSong || event.target.parentNode;
-    if (event)
-        event.target.parentNode.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-    var file = previous.songObject;
+    if (event.target.nodeName === "A" || (nextSong && nextSong.nodeName === "LI")) {
 
-    var _URL = window.URL || window.webkitURL;
 
-    // notifyMe(file.name);
+        applyCurrentSong(event.target.parentNode, previous);
+        previous = nextSong || event.target.parentNode;
+        var file = previous.songObject;
 
-    if (file.name.indexOf(".mp4") !== -1) {
-        if (audio)
-            audio.pause();
-        video.src = _URL.createObjectURL(file);
-        video.style.opacity = "0.9";
-        video.style.display = "block";
-        video.load();
-        video.play();
-        window.cancelAnimationFrame(frameLooper);
-        animationFlag = false;
-    } else {
-        audio.src = _URL.createObjectURL(file);
-        if (video) {
-            video.pause();
-            video.style.opacity = "0";
-            // video.style.display = "none";
+        var _URL = window.URL || window.webkitURL;
+
+        // notifyMe(file.name);
+
+        var chantersPlayer = document.querySelector("chanters-player");
+        if (file.name.indexOf(".mp4") !== -1) {
+            if (audio)
+                audio.pause();
+            video.src = _URL.createObjectURL(file);
+            chantersPlayer.videoMode = "visible";
+            video.load();
+            video.play();
+            window.cancelAnimationFrame(frameLooper);
+            animationFlag = false;
+        } else {
+            audio.src = _URL.createObjectURL(file);
+            if (video) {
+                video.pause();
+                video.style.display = "none";
+                chantersPlayer.videoMode = "hidden";
+            }
+            audio.load();
+            audio.play();
+            visualizer();
+            seek.max = audio.duration;
+            if (!nextSong)
+                event.target.parentNode.appendChild(canvas);
         }
-        audio.load();
-        audio.play();
-        visualizer();
-        seek.max = audio.duration;
-        if (!nextSong)
-            event.target.parentNode.appendChild(canvas);
+
+
+        localStorage.isPlaying = true;
+        localStorage.songName = file.name;
+        seek.style.display = "block";
+        document.querySelector("#totalTime").style.display = "block";
+        document.querySelector("#currentTime").style.display = "block";
+    }
+}
+
+function applyCurrentSong(currentSong, previousSong) {
+    if (previousSong) {
+        previousSong.classList.remove("border-right-red");
+        previousSong.style.backgroundColor = "transparent"
     }
 
-
-
-
-    seek.style.display = "block";
-    document.querySelector("#totalTime").style.display = "block";
-    document.querySelector("#currentTime").style.display = "block";
+    currentSong.classList.add("border-right-red");
+    currentSong.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 }
 
 audio.oncanplaythrough = function() {
@@ -189,7 +217,7 @@ audio.oncanplaythrough = function() {
         min = '0' + min;
     }
 
-    $("#totalTime").innerText = min + " :: " + sec;
+    document.querySelector("#totalTime").innerText = min + " : " + sec;
 }
 
 audio.onended = function() {
@@ -334,7 +362,6 @@ function scrollList(event) {
     var currPos = this.scrollTop;
     currPos = parseInt(currPos) - (delta * 10);
     this.scrollTop = currPos;
-    console.log(currPos);
 };
 
 // var reader = new FileReader();

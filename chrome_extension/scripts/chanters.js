@@ -239,7 +239,7 @@ var helper = {
     inputBinding: function(n) {
         var key = this.getReplaceArr(n.value);
         // change input value
-        if (key && this.userData.proto[key[0]]) {
+        if (key && (this.userData.proto[key[0]] || this.userData.proto[key[0]] === "")) {
             n.value = this.userData.proto[key[0]];
             this.inputListerner(n, key[0], true);
             this.attributeBindig(n);

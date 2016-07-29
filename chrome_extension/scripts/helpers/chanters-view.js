@@ -1,18 +1,22 @@
  Chanters("chanters-view", {
      domReady: function() {
          if (location.pathname === "/index.html") {
+             this.mode = "night";
              setTimeout(function() {
-                 this.style.backgroundColor = "rgba(0,0,0,0.0)";
+                 this.mode = "day";
              }.bind(this), 200);
          }
-         this.loadTemplate(function(error, userRequestedFile) {
-             this.insertToDom(userRequestedFile);
-         }.bind(this));
+         this.template = "login.html";
+
+         window.onbeforeunload = function() {
+             delete localStorage.isPlaying;
+             delete localStorage.songName;
+         }
      },
      loadTemplate: function(cb, localPage) {
          var apiURL = "http://localhost:4444/static/views/";
 
-         var chromeAppUrl = "/views/"
+         var chromeAppUrl = "/views/";
          var templateUrl = chromeAppUrl + this.template;
 
          var xmlhttp;
@@ -49,6 +53,15 @@
          this.appendChild(tagToInsert);
      },
      template_: function() {
-         this.domReady();
+         this.loadTemplate(function(error, userRequestedFile) {
+             this.insertToDom(userRequestedFile);
+         }.bind(this));
+     },
+     mode: "",
+     mode_: function() {
+         if (this.mode === "day")
+             this.classList.remove("dark-div");
+         if (this.mode === "night")
+             this.classList.add("dark-div");
      }
  });

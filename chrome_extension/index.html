@@ -21,10 +21,13 @@
                         <div id="bar3"></div>
                         <div id="bar4"></div>
                     </div>
+                    <span id="currentTime" style="position:absolute;left:19%;padding: 12px 14px;display:none">00::00</span>
+                    <span id="totalTime" style="position:absolute;left:25%;padding: 12px 14px;display:none">00::00</span>
                     <div class="logout">
-                        <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Player</button>
-                        <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Log In</button>
+                       <!--  <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Player</button>
+                        <button class="txt-shadow btn-menu" on-click="{{goToPlayer}}">Log In</button> -->
                     </div>
+                    <input type="range" id="seek" min="0" max="100" value="0" style="width:85%;margin-top: 38px;display:none">
                 </div>
             </template>
             <script src="scripts/helpers/chanters-header.js"></script>
@@ -37,16 +40,16 @@
             </template>
             <script src="scripts/helpers/chanters-background.js"></script>
         </chanters-background>
-        <chanters-view attributes="template:login.html" clsss="dark-div">
+        <chanters-view attributes="template:login.html" class="{{mode}}">
             <template></template>
             <script src="scripts/helpers/chanters-view.js"></script>
         </chanters-view>
         <chanters-fotter>
             <template>
-                <div class="fixed-bottom footer top-border dark-div box-shadow">
+                <!-- <div class="fixed-bottom footer top-border dark-div box-shadow">
                     <button class="border box-shadow dark-div singin txt-shadow">Sing up</button>
                     <span class="border box-shadow dark-div txt-shadow logo">Chanters</span>
-                </div>
+                </div> -->
             </template>
             <script src="scripts/helpers/chanters-fotter.js"></script>
         </chanters-fotter>
